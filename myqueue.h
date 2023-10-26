@@ -60,7 +60,6 @@ template <typename T> ostream & operator<<(ostream& os,CoolList<T> const & list)
 template <typename T> ostream & operator<<(ostream& os,CoolNode<T> const & node);
 template <typename T> ostream & operator<<(ostream& os, CoolList<CoolList<T>*> const & list);
 
-
 template <typename T> class CoolIter{
     private:CoolNode<T>* current;
 
