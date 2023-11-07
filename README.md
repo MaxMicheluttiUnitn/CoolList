@@ -241,11 +241,11 @@ You can also concatenate CoolLists by summing them
 
 You know what is cooler than a CoolList? A CoolList of CoolLists, obviously! Find out how you can get one by splitting your CoolLists!<br>
 
-You can split your CoolList into 2 using the **split_at_index(int index)** function. This will return a pointer to a CoolList of pointers to CoolLists (yes, I know, maybe I should change this, it's a bit complicated and uncool). The first element of this CoolList will be the shortened verion of the original CoolList, while the second element will be a newly genertated CoolList which contains the tail of the original CoolList. The original CoolList will be shortened. If the index parameter is out of bounds, an **IndexOutOfBoundsException** will be thrown.
+You can split your CoolList into 2 using the **split_at_index(int index)** function. This will return a CoolList of pointers to CoolLists (yes, I know, maybe I should change this, but at least it is not the most uncool thing possible). The first element of this CoolList will be the shortened verion of the original CoolList, while the second element will be a newly genertated CoolList which contains the tail of the original CoolList. The original CoolList will be shortened. If the index parameter is out of bounds, an **IndexOutOfBoundsException** will be thrown.
 
 ```
     // cool_list = [1,2,3,4,5,6]
-    CoolList<CoolList<T>*>* list_of_lists = cool_list.split_at_index(3);
+    CoolList<CoolList<T>*> list_of_lists = cool_list.split_at_index(3);
     
     // cool_list = [1,2,3]
     // list_of_lists = [[1,2,3],[4,5,6]]
@@ -255,7 +255,7 @@ If you don't want to split the original CoolList you can use the **split_at_inde
 
 ```
     // cool_list = [1,2,3,4,5,6]
-    CoolList<CoolList<T>*>* list_of_lists = cool_list.split_at_index_const(3);
+    CoolList<CoolList<T>*> list_of_lists = cool_list.split_at_index_const(3);
     
     // cool_list = [1,2,3,4,5,6]
     // list_of_lists = [[1,2,3],[4,5,6]]
@@ -265,7 +265,7 @@ Another way to split CoolLists is by specifying an item that is used as separato
 
 ```
     // cool_list = ['a','b','a','a','c','d']
-    CoolList<CoolList<T>*>* list_of_lists = cool_list.split('a');
+    CoolList<CoolList<T>*> list_of_lists = cool_list.split('a');
     
     // cool_list = []
     // list_of_lists = [[],['b'],[],['c','d']]
@@ -275,7 +275,7 @@ Also in this case, you can avoid modifying the original CoolList with the **spli
 
 ```
     // cool_list = ['a','b','a','a','c','d']
-    CoolList<CoolList<T>*>* list_of_lists = cool_list.split_const('a');
+    CoolList<CoolList<T>*> list_of_lists = cool_list.split_const('a');
     
     // cool_list = ['a','b','a','a','c','d']
     // list_of_lists = [[],['b'],[],['c','d']]
