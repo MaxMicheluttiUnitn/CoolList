@@ -61,9 +61,9 @@ int main(){
     cout<<"List: "<<my_list<<endl;
 
     auto split=my_list.split_at_index_const(5);
-    cout<<"Split: "<<(*split)<<endl;
-    cout<<"Split[0]: "<<*(*split)[0]<<endl;
-    cout<<"Split[1]: "<<*(*split)[1]<<endl;
+    cout<<"Split: "<<split<<endl;
+    cout<<"Split[0]: "<<*(split[0])<<endl;
+    cout<<"Split[1]: "<<*(split[1])<<endl;
     cout<<"List: "<<my_list<<endl;
 
     CoolList<int> new_list = CoolList<int>();
@@ -88,7 +88,7 @@ int main(){
     cout<<"New List: "<<new_list<<endl;
     cout<<"Instances of 2: "<<new_list.count_instances_of(2)<<endl;
     auto lists = new_list.split_const(2);
-    cout<<"Lists: "<<(*lists)<<endl;
+    cout<<"Lists: "<<lists<<endl;
     cout<<"New List: "<<new_list<<endl;
     new_list.map(sum_1);
     cout<<"New List: "<<new_list<<endl;

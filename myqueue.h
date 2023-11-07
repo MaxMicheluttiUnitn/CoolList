@@ -466,6 +466,22 @@ template <typename T> class CoolList{
         }
     }
 
+    CoolList<T>& operator=(const CoolList& list){
+        this.head = list.head;
+        this.tail = list.tail;
+        this.length = list.length;
+        return *this;
+    }
+
+    CoolList<T>& operator=(CoolList&& list){
+        this.head = list.head;
+        this.tail = list.tail;
+        this.length = list.length;
+        list.head = nullptr;
+        list.tail = nullptr;
+        return *this;
+    }
+
     /**
      * Sort the list
     */
@@ -871,15 +887,15 @@ template <typename T> class CoolList{
     /**
      * Splits the list into 2 coolists at the given index
     */
-    CoolList<CoolList<T>*>* split_at_index(int index){
+    CoolList<CoolList<T>*> split_at_index(int index){
         if(index<0 || index>this->getLength()){
             throw IndexOutOfBoundsException("split at index");
         }
-        CoolList<CoolList<T>*>* lists = new CoolList<CoolList<T>*>();
+        CoolList<CoolList<T>*> lists = CoolList<CoolList<T>*>();
         CoolList<T>* new_list = new CoolList<T>();
-        lists->enqueue(this);
-        lists->enqueue(new_list);
         if(index==this->getLength()){
+            lists.enqueue(this);
+            lists.enqueue(move(new_list));
             return lists;
         }
         CoolNode<T>* split_item =this->getNode(index);
@@ -898,6 +914,8 @@ template <typename T> class CoolList{
             new_list->enqueueNode(split_item);
             split_item = next;
         }
+        lists.enqueue(this);
+        lists.enqueue(move(new_list));
         return lists;
     }
 
@@ -905,16 +923,16 @@ template <typename T> class CoolList{
     /**
      * Splits the list into multiple lists when the given item is found, removing the instances of the item.
     */
-    CoolList<CoolList<T>*>* split(T item){
+    CoolList<CoolList<T>*> split(T item){
         CoolList<T>* current_list = this;
-        CoolList<CoolList<T>*>* res = new CoolList<CoolList<T>*>();
-        res->enqueue(this);
+        CoolList<CoolList<T>*> res = CoolList<CoolList<T>*>();
+        res.enqueue(this);
         while(current_list->contains(item)){
             int index=current_list->index_of(item);
-            CoolList<CoolList<T>*>* lists = current_list->split_at_index(index);
-            (*lists)[1]->dequeue();
-            current_list = (*lists)[1];
-            res->enqueue((*lists)[1]);
+            CoolList<CoolList<T>*> lists = current_list->split_at_index(index);
+            lists[1]->dequeue();
+            current_list = lists[1];
+            res.enqueue(lists[1]);
         }
         return res;
     }
@@ -922,7 +940,7 @@ template <typename T> class CoolList{
     /**
      * Splits the list into multiple lists when the given item is found, removing the instances of the item, without modifying the original list
     */
-    CoolList<CoolList<T>*>* split_const(T item)const{
+    CoolList<CoolList<T>*> split_const(T item)const{
         CoolList<T>* new_list=new CoolList<T>(*this);
         return new_list->split(item);
     }
@@ -930,7 +948,7 @@ template <typename T> class CoolList{
     /**
      * Splits the list into 2 coolists at the given index
     */
-    CoolList<CoolList<T>*>* split_at_index_const(int index)const{
+    CoolList<CoolList<T>*> split_at_index_const(int index)const{
         CoolList<T>* new_list=new CoolList<T>(*this);
         return new_list->split_at_index(index);
     }
