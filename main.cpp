@@ -3,8 +3,9 @@ using namespace std;
 #include <vector>
 #include <iostream>
 
-int sum_1(int x){return x+1;};
-bool is_3(int x){return x==3;};
+int sum_1(int x){return x+1;}
+bool is_3(int x){return x==3;}
+int sum(const int x,const int y){return x+y;}
 
 // An example of the use of CoolList's cool functionalities
 int main(){
@@ -94,4 +95,6 @@ int main(){
     cout<<"New List: "<<new_list<<endl;
     new_list.filter(is_3);
     cout<<"New List: "<<new_list<<endl;
+    int acc = new_list.accumulate(sum,0);
+    cout<<"Sum is: "<<acc<<endl;
 }

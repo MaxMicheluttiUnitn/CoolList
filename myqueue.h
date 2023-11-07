@@ -1002,10 +1002,29 @@ template <typename T> class CoolList{
     /**
      * Applyes the specified function to all the elements of the list
     */
-    void map(T (*func)(T)){
+    void apply(T (*func)(T)){
         for(auto it=this->begin();it!=this->end();it++){
             (*it)=func(*it);
         }
+    }
+
+    /**
+     * Applies an incrementative function to the list 
+    */
+    T accumulate(T (*func)(const T,const T), T init_value)const{
+        for(CoolIterConst iter=this->cbegin(); iter != this->cend(); iter++){
+            init_value = func(init_value,*iter);
+        } 
+        return init_value;
+    }
+
+    /**
+     * Applyes the specified function to all the elements of the list
+    */
+    CoolList<T> map(T (*func)(T)){
+        CoolList<T> res(*this);
+        res.apply(func);
+        return res;
     }
 
     /**

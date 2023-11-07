@@ -331,7 +331,7 @@ There are currently 4 types of Iterators for CoolLists:
 
 With CoolLists mapping and filtering are as easy as they can be!<br>
 
-You can transform uniformly all the items in your CoolList by applying a mapping. What is a mapping?  It's just a transformation that occurs by applying a function to your data. To perform this transformation you can call the **map()** function on a CoolList and pass as the parameter of this function the function that you want to apply, as in the example below
+You can transform uniformly all the items in your CoolList by applying a function to all its items. To perform this transformation you can call the **apply()** function on a CoolList and pass as the parameter of this function the function that you want to apply, as in the example below
 
 ```
     int sum_five(int i){
@@ -342,9 +342,27 @@ You can transform uniformly all the items in your CoolList by applying a mapping
         [...]
         // cool_list is [1,2,3]
 
-        cool_list.map(sum_five);
+        cool_list.apply(sum_five);
 
         // now cool_list is [6,7,8]
+    }
+```
+
+If you want to apply the function on your CoolList without changing it, you can instead use the **map()** function, which will retiurn a newly generated CoolList which is the result of applying the function to the original CoolList
+
+```
+    int sum_five(int i){
+        return i + 5;
+    }
+
+    int main(){
+        [...]
+        // cool_list is [1,2,3]
+
+        CoolList<int> mapped = cool_list.map(sum_five);
+
+        // now cool_list is [1,2,3]
+        // and mapped is [6,7,8]
     }
 ```
 
@@ -363,6 +381,23 @@ Another useful function that you can apply to a CoolList is a filter. A filter i
         cool_list.filter(is_uncool);
 
         // now cool_list is [2,4]
+    }
+```
+
+One more cool thing that you can do with CoolLists is accumulate their content. You can use accumulators to apply a function that puts together all items in the list to produce a single result. The example below will help you understand better
+
+```
+    int multiply(int i, const int j){
+        return i * j;
+    }
+
+    int main(){
+        [...]
+        // cool_list is [1,2,3,4,5]
+
+        int factorial = cool_list.accumulate(multiply,1);
+
+        // factorial is 1 * [ 1 * 2 * 3 * 4 * 5 ]
     }
 ```
 
