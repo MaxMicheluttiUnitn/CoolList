@@ -899,15 +899,14 @@ template <typename T> class CoolList{
             return lists;
         }
         CoolNode<T>* split_item =this->getNode(index);
-        //int split_len=this->getLength()-index;
         this->length = index;
         CoolNode<T>* prev= split_item->getPrevious();
-        //CoolNode<T>* next= split_item->getNext();
         if(prev==nullptr){
             this->head=nullptr;
             this->tail=nullptr;
         }else{
             prev->setNext(nullptr);
+            this->tail=prev;
         }
         while(split_item!=nullptr){
             CoolNode<T>* next=split_item->getNext();
@@ -1019,7 +1018,7 @@ template <typename T> class CoolList{
     }
 
     /**
-     * Applyes the specified function to all the elements of the list
+     * Applyes the specified function to all the elements of the list without editing the original list
     */
     CoolList<T> map(T (*func)(T)){
         CoolList<T> res(*this);
@@ -1028,7 +1027,7 @@ template <typename T> class CoolList{
     }
 
     /**
-     * Applyes the specified function to all the elements of the list
+     * Applyes the specified function to all the elements of the list and removes all elements that make it true
     */
     void filter(bool (*func)(T)){
         CoolList<int> indexes= CoolList();
@@ -1104,7 +1103,8 @@ template <typename T> class CoolList{
 };
 
 template <typename T> ostream & operator<<(ostream& os,CoolList<T>const & list){
-    os<<list.length<<" [";
+    //os<<list.length<<" [";
+    os<<"[";
     for(auto iter=list.cbegin();iter!=list.cend();iter++){
         if(iter!=list.cbegin()){
             os<<",";
@@ -1116,7 +1116,8 @@ template <typename T> ostream & operator<<(ostream& os,CoolList<T>const & list){
 }
 
 template <typename T> ostream & operator<<(ostream& os,CoolList<CoolList<T>*>const & list){
-    os<<list.length<<" [";
+    //os<<list.length<<" [";
+    os<<"[";
     for(auto iter=list.cbegin();iter!=list.cend();iter++){
         if(iter!=list.cbegin()){
             os<<",";
