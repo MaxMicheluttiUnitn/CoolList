@@ -29,6 +29,12 @@ You can also use the 'new' operator to allocate the CoolList in the heap
     CoolList<int> * cool_list = new CoolList<int>();
 ```
 
+You can even build a CoolList form an initializer list
+
+```
+    CoolList<int> cool_list = {1,2,3,4};
+```
+
 ### Destructor
 
 Ok, You don't need this istance of the CoolList anymore... what happens when it is destroyed?<br>

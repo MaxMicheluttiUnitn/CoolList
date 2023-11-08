@@ -121,5 +121,8 @@ int main(){
 
     new_cool_list.remove_all_every(0,9,5);
     cout<<"New cool list: "<<new_cool_list<<endl;
+
+    CoolList<int> wow = {1,3,7,11,2,0,-1};
+    cout<<"Wow: "<<wow<<endl;
 }
 

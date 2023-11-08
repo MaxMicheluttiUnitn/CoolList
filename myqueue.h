@@ -467,6 +467,15 @@ template <typename T> class CoolList{
         this->tail = prev;
     }
 
+    CoolList(std::initializer_list<T> init){
+        this->head = nullptr;
+        this->tail = nullptr;
+        this->length = 0;
+        for(auto iter = init.begin();iter!=init.end();iter++){
+            this->push(*iter);
+        }
+    }
+
     ~CoolList(){
         this->tail = nullptr;
         while(this->head != nullptr){
