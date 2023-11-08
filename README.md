@@ -168,6 +168,18 @@ You can also get a reference to an item in the CoolList through the **[]** opera
     number++; 
 ```
 
+You can also access the front and the back of the list with **front()**, **back()**, **frontReference()** and **backReference()** which will return a copy or a reference to the first or last element of the list<br>
+
+If you cannot decide which cool item to retrieve from your CoolList you can retrieve a random one by sampling. To sample from the CoolList use the **sample()** function (with optionally a set seed), or with the **sampleReference()** function if you want to edit the value in the list.
+
+```
+    // rnd is a random integere from the CoolList
+    int rnd = cool_list.sample();
+
+    // A random elementel will be incremented inside the CoolList
+    cool_list.sampleReference() += 1;
+```
+
 ### Checking Basic Properties
 
 Ok, now some basic, but very useful stuff<br>

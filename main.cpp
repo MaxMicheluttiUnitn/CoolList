@@ -124,5 +124,8 @@ int main(){
 
     CoolList<int> wow = {1,3,7,11,2,0,-1};
     cout<<"Wow: "<<wow<<endl;
+    
+    wow.sampleReference()+=5;
+    cout<<"Wow: "<<wow<<endl;
 }
 

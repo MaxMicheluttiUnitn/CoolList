@@ -8,6 +8,7 @@ using namespace std;
 #include <time.h>
 #include <string>
 #include <utility>
+#include <random>
 
 class UnreachableException{
     string msg;
@@ -328,6 +329,7 @@ template <typename T> class CoolList{
     private: CoolNode<T>* head;
     private: CoolNode<T>* tail;
     private: int length;
+    private: std::mt19937 generator;
 
     private:
     /**
@@ -440,16 +442,28 @@ template <typename T> class CoolList{
         }
     }
 
+    void shuffle_from_generator(std::mt19937 gen){
+        int len = this->getLength();
+        for(int index=0;index<len-1;index++){
+            std::uniform_int_distribution<> distrib(index,len-1);
+            int swapped = distrib(gen);
+            if(swapped!=index)
+                this->swapNodes(index,swapped);
+        }
+    }
+
     public:
     CoolList(){
         this->head = nullptr;
         this->tail = nullptr;
         this->length = 0;
+        this->generator = mt19937((unsigned)time(nullptr));
     }
 
     CoolList(const CoolList& list){
         this->head = nullptr;
         this->tail = nullptr;
+        this->generator = mt19937((unsigned)time(nullptr));
         CoolNode<T>* prev = nullptr;
         this->length = list.getLength();
         for(CoolIterConst iter = list.cbegin();iter != list.cend(); iter++){
@@ -470,6 +484,7 @@ template <typename T> class CoolList{
     CoolList(std::initializer_list<T> init){
         this->head = nullptr;
         this->tail = nullptr;
+        this->generator = mt19937((unsigned)time(nullptr));
         this->length = 0;
         for(auto iter = init.begin();iter!=init.end();iter++){
             this->push(*iter);
@@ -574,23 +589,15 @@ template <typename T> class CoolList{
      * Shuffle the list randomly
     */
     void shuffle(){
-        this->shuffle((unsigned)time(NULL));
+        this->shuffle_from_generator(this->generator);
     }
 
     /**
      * Shuffle the list randomly given the seed
     */
     void shuffle(unsigned int seed){
-        srand(seed);
-        int len = this->getLength();
-        for(int index=0;index<len-1;index++){
-            int n;
-            int size = len - index;
-            while( ( n = rand() ) > RAND_MAX - (RAND_MAX-size+1)%size ){}
-            n=n%size + index;
-            cout.flush();
-            this->swapNodes(index,n);
-        }
+        std::mt19937 seed_generator(seed);
+        this->shuffle_from_generator(seed_generator);
     }
 
     /**
@@ -664,6 +671,73 @@ template <typename T> class CoolList{
         }
         throw UnreachableException("get reference");
     }
+
+    /**
+     * Returns a copy of the front of the list
+    */
+    T front()const{
+        return this->head->getContent();
+    }
+
+    /**
+     * Returns a reference to the front of the list
+    */
+    T& frontReference(){
+        return this->head->getContentReference();
+    }
+
+    /**
+     * Returns a copy of the back of the list
+    */
+    T back()const{
+        return this->tail->getContent();
+    }
+
+    /**
+     * Returns a reference to the back of the list
+    */
+    T& backReference(){
+        return this->tail->getContentReference();
+    }
+
+    /**
+     * returns a random element of the list
+    */
+    T sample(){
+        std::uniform_int_distribution<> distrib(0, this->getLength()-1);
+        int index = distrib(this->generator);
+        return this->get(index);
+    }
+
+    /**
+     * returns a random reference to an element of the list
+    */
+    T& sampleReference(){
+        std::uniform_int_distribution<> distrib(0, this->getLength()-1);
+        int index = distrib(this->generator);
+        return this->getReference(index);
+    }
+
+    /**
+     * returns a random element of the list
+    */
+    T sample(unsigned int seed){
+        std::mt19937 gen(seed);
+        std::uniform_int_distribution<> distrib(0, this->getLength()-1);
+        int index = distrib(gen);
+        return this->get(index);
+    }
+
+    /**
+     * returns a random reference to an element of the list
+    */
+    T& sampleReference(unsigned int seed){
+        std::mt19937 gen(seed);
+        std::uniform_int_distribution<> distrib(0, this->getLength()-1);
+        int index = distrib(gen);
+        return this->getReference(index);
+    }
+
 
     /**
      * Add an element to the end of the list
