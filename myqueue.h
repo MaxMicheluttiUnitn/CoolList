@@ -18,6 +18,15 @@ class UnreachableException{
     }
 };
 
+class MemoryException{
+    string msg;
+    
+    public:
+    MemoryException(string msg){
+        this->msg=msg;
+    }
+};
+
 class ItemNotFoundException{
     string msg;
     
@@ -239,13 +248,13 @@ template <typename T> class CoolNode{
 
     public:
     CoolNode(T content){
-        this->content = content;
+        this->content = T(content);
         this->next = nullptr;
         this->previous = nullptr;
     }
 
     CoolNode(T content,CoolNode<T>* previous,CoolNode<T>* next){
-        this->content = content;
+        this->content = T(content);
         this->next = next;
         this->previous = previous;
     }
@@ -443,9 +452,10 @@ template <typename T> class CoolList{
         this->tail = nullptr;
         CoolNode<T>* prev = nullptr;
         this->length = list.getLength();
-        for(int i=0;i<this->length;i++){
-            T item = list.get(i);
-            CoolNode<T>* new_node = new CoolNode(item);
+        for(CoolIterConst iter = list.cbegin();iter != list.cend(); iter++){
+            CoolNode<T>* new_node = new CoolNode(*iter);
+            if(new_node == nullptr)
+                throw MemoryException("copy constructor");
             if(prev == nullptr){
                 this->head = new_node;
             }else{
@@ -467,18 +477,19 @@ template <typename T> class CoolList{
     }
 
     CoolList<T>& operator=(const CoolList& list){
-        this.head = list.head;
-        this.tail = list.tail;
-        this.length = list.length;
+        this->head = list.head;
+        this->tail = list.tail;
+        this->length = list.length;
         return *this;
     }
 
     CoolList<T>& operator=(CoolList&& list){
-        this.head = list.head;
-        this.tail = list.tail;
-        this.length = list.length;
+        this->head = list.head;
+        this->tail = list.tail;
+        this->length = list.length;
         list.head = nullptr;
         list.tail = nullptr;
+        list.length = 0;
         return *this;
     }
 
@@ -508,8 +519,10 @@ template <typename T> class CoolList{
     /**
      * returns a pointer to a list that is the same as the initial one, but sorted, without modifying the original list
     */
-    CoolList<T>* getSortedHeap(){
+    CoolList<T>* getSortedPointer(){
         auto res = new CoolList(*this);
+        if(res==nullptr)
+            throw MemoryException("get sorted pointer");
         res->sort();
         return res;
     }
@@ -540,8 +553,10 @@ template <typename T> class CoolList{
     /**
      * Returns a pointer to a list that is the same as the initial one, but reversed, without modifying the original list
     */
-    CoolList<T>* getReversedHeap(){
+    CoolList<T>* getReversedPointer(){
         auto res = new CoolList(*this);
+        if(res==nullptr)
+            throw MemoryException("get reversed pointer");
         res->reverse();
         return res;
     }
@@ -590,8 +605,10 @@ template <typename T> class CoolList{
     /**
      * Returns a pointer to a list that is the same as the initial one, but shuffled, without modifying the original list
     */
-    CoolList<T>* getShuffledHeap(){
+    CoolList<T>* getShuffledPointer(){
         auto res = new CoolList(*this);
+        if(res==nullptr)
+            throw MemoryException("get shuffled pointer");
         res->shuffle();
         return res;
     }
@@ -599,8 +616,10 @@ template <typename T> class CoolList{
     /**
      * Returns a pointer to a list that is the same as the initial one, but shuffled given the seed, without modifying the original list
     */
-    CoolList<T>* getShuffledHeap(unsigned int seed){
+    CoolList<T>* getShuffledPointer(unsigned int seed){
         auto res = new CoolList(*this);
+        if(res==nullptr)
+            throw MemoryException("get shuffled pointer seeded");
         res->shuffle(seed);
         return res;
     }
@@ -642,6 +661,8 @@ template <typename T> class CoolList{
     */
     bool enqueue(T item){
         CoolNode<T> * node = new CoolNode<T>(item);
+        if(node==nullptr)
+            throw MemoryException("enqueue");
         if(this->head == nullptr){
             this->head = node;
             this->tail = node;
@@ -661,7 +682,7 @@ template <typename T> class CoolList{
      * Add an element to the end of the list
     */
     bool push(T item){
-        return enqueue(item);
+        return this->enqueue(item);
     }
 
     /**
@@ -669,6 +690,8 @@ template <typename T> class CoolList{
     */
     bool add_first(T item){
         CoolNode<T> * node = new CoolNode<T>(item);
+        if(node==nullptr)
+            throw MemoryException("add first");
         if(this->head == nullptr){
             this->head = node;
             this->tail = node;
@@ -688,6 +711,8 @@ template <typename T> class CoolList{
         if((index<0)||(index>this->getLength()))
             return false;
         CoolNode<T> * new_node = new CoolNode<T>(item);
+        if(new_node==nullptr)
+            throw MemoryException("add");
         if(index == this->getLength()){
             new_node->setPrevious(this->tail);
             this->tail->setNext(new_node);
@@ -887,69 +912,82 @@ template <typename T> class CoolList{
     /**
      * Splits the list into 2 coolists at the given index
     */
-    CoolList<CoolList<T>*> split_at_index(int index){
+    CoolList<CoolList<T>> split_at_index(int index){
         if(index<0 || index>this->getLength()){
             throw IndexOutOfBoundsException("split at index");
         }
-        CoolList<CoolList<T>*> lists = CoolList<CoolList<T>*>();
-        CoolList<T>* new_list = new CoolList<T>();
+        CoolList<CoolList<T>> lists = CoolList<CoolList<T>>();
+        CoolList<T> new_list = CoolList<T>();
         if(index==this->getLength()){
-            lists.enqueue(this);
-            lists.enqueue(move(new_list));
+            CoolList<T> this_moved = (*this);
+            lists.enqueue(CoolList<T>());
+            lists.enqueue(CoolList<T>());
+            lists[0] = move(this_moved);
+            lists[1] = move(new_list);
             return lists;
         }
         CoolNode<T>* split_item =this->getNode(index);
         this->length = index;
         CoolNode<T>* prev= split_item->getPrevious();
         if(prev==nullptr){
-            this->head=nullptr;
-            this->tail=nullptr;
+            this->head = nullptr;
+            this->tail = nullptr;
         }else{
+            this->tail = prev;
             prev->setNext(nullptr);
-            this->tail=prev;
         }
         while(split_item!=nullptr){
             CoolNode<T>* next=split_item->getNext();
-            new_list->enqueueNode(split_item);
+            new_list.enqueueNode(split_item);
             split_item = next;
         }
-        lists.enqueue(this);
-        lists.enqueue(move(new_list));
+        CoolList<T> this_moved = (*this);
+        lists.enqueue(CoolList<T>());
+        lists.enqueue(CoolList<T>());
+        lists[0] = move(this_moved);
+        lists[1] = move(new_list);
         return lists;
     }
-
 
     /**
      * Splits the list into multiple lists when the given item is found, removing the instances of the item.
     */
-    CoolList<CoolList<T>*> split(T item){
-        CoolList<T>* current_list = this;
-        CoolList<CoolList<T>*> res = CoolList<CoolList<T>*>();
-        res.enqueue(this);
-        while(current_list->contains(item)){
-            int index=current_list->index_of(item);
-            CoolList<CoolList<T>*> lists = current_list->split_at_index(index);
-            lists[1]->dequeue();
-            current_list = lists[1];
-            res.enqueue(lists[1]);
+    CoolList<CoolList<T>> split(T item){
+        if(!this->contains(item)){
+            CoolList<CoolList<T>> res = CoolList<CoolList<T>>();
+            res.enqueue(*this);
+            return res;
         }
+        int index = this->index_of(item);
+        CoolList<CoolList<T>> res = this->split_at_index(index);
+        CoolList<T> current_list = res.pop();
+        CoolList<CoolList<T>> tmp = CoolList<CoolList<T>>();
+        current_list.dequeue();
+        while(current_list.contains(item)){
+            index = current_list.index_of(item);
+            tmp = current_list.split_at_index(index);
+            tmp[1].dequeue();
+            res.enqueue(tmp.dequeue());
+            current_list = tmp.dequeue();
+        }
+        res.enqueue(current_list);
         return res;
     }
 
     /**
      * Splits the list into multiple lists when the given item is found, removing the instances of the item, without modifying the original list
     */
-    CoolList<CoolList<T>*> split_const(T item)const{
-        CoolList<T>* new_list=new CoolList<T>(*this);
-        return new_list->split(item);
+    CoolList<CoolList<T>> split_const(T item)const{
+        CoolList<T> new_list=CoolList<T>(*this);
+        return new_list.split(item);
     }
 
     /**
      * Splits the list into 2 coolists at the given index
     */
-    CoolList<CoolList<T>*> split_at_index_const(int index)const{
-        CoolList<T>* new_list=new CoolList<T>(*this);
-        return new_list->split_at_index(index);
+    CoolList<CoolList<T>> split_at_index_const(int index)const{
+        CoolList<T> new_list=CoolList<T>(*this);
+        return new_list.split_at_index(index);
     }
 
     /**
@@ -1081,7 +1119,7 @@ template <typename T> class CoolList{
         return true;
     }
 
-    friend bool operator==(const CoolList<T*>& a,const CoolList<T*>& b){
+    /*friend bool operator==(const CoolList<T*>& a,const CoolList<T*>& b){
         if(a.getLength()!=b.getLength()){
             return false;
         }
@@ -1095,7 +1133,7 @@ template <typename T> class CoolList{
             b_iter++;
         }
         return true;
-    }
+    }*/
 
     friend bool operator!=(const CoolList<T>& a,const CoolList<T>& b){
         return ! (a == b);
@@ -1103,7 +1141,7 @@ template <typename T> class CoolList{
 };
 
 template <typename T> ostream & operator<<(ostream& os,CoolList<T>const & list){
-    //os<<list.length<<" [";
+    os<<list.length<<" ";
     os<<"[";
     for(auto iter=list.cbegin();iter!=list.cend();iter++){
         if(iter!=list.cbegin()){
@@ -1116,7 +1154,7 @@ template <typename T> ostream & operator<<(ostream& os,CoolList<T>const & list){
 }
 
 template <typename T> ostream & operator<<(ostream& os,CoolList<CoolList<T>*>const & list){
-    //os<<list.length<<" [";
+    os<<list.length<<" ";
     os<<"[";
     for(auto iter=list.cbegin();iter!=list.cend();iter++){
         if(iter!=list.cbegin()){

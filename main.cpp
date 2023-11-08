@@ -63,8 +63,8 @@ int main(){
 
     auto split=my_list.split_at_index_const(5);
     cout<<"Split: "<<split<<endl;
-    cout<<"Split[0]: "<<*(split[0])<<endl;
-    cout<<"Split[1]: "<<*(split[1])<<endl;
+    cout<<"Split[0]: "<<split[0]<<endl;
+    cout<<"Split[1]: "<<split[1]<<endl;
     cout<<"List: "<<my_list<<endl;
 
     CoolList<int> new_list = CoolList<int>();
@@ -97,4 +97,20 @@ int main(){
     cout<<"New List: "<<new_list<<endl;
     int acc = new_list.accumulate(sum,0);
     cout<<"Sum is: "<<acc<<endl;
+
+    auto res = new_list.split_at_index(5);
+    cout<<"New List: "<<new_list<<endl;
+    cout<<"Res:"<<res<<endl;
+    res[0][0] = 20;
+    cout<<"New List: "<<new_list<<endl;
+    cout<<"Res:"<<res<<endl;
+
+    res.dequeue();
+    for(CoolIter iter=res.begin();iter!=res.end();iter++){
+        new_list.merge(*iter);
+    }
+    cout<<"New List: "<<new_list<<endl;
+
+    auto res_split = new_list.split(2);
+    cout<<"Res Split :"<<res_split<<endl;
 }

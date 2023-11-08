@@ -241,7 +241,7 @@ You can also concatenate CoolLists by summing them
 
 You know what is cooler than a CoolList? A CoolList of CoolLists, obviously! Find out how you can get one by splitting your CoolLists!<br>
 
-You can split your CoolList into 2 using the **split_at_index(int index)** function. This will return a CoolList of pointers to CoolLists (yes, I know, maybe I should change this, but at least it is not the most uncool thing possible). The first element of this CoolList will be the shortened verion of the original CoolList, while the second element will be a newly genertated CoolList which contains the tail of the original CoolList. The original CoolList will be shortened. If the index parameter is out of bounds, an **IndexOutOfBoundsException** will be thrown.
+You can split your CoolList into 2 using the **split_at_index(int index)** function. This will return a CoolList of CoolLists of your chosen type (so cool!!!). The first element of this CoolList will be a copy of the shortened verion of the original CoolList, while the second element will be a newly genertated CoolList which contains the tail of the original CoolList. The original CoolList will be shortened. If the index parameter is out of bounds, an **IndexOutOfBoundsException** will be thrown.
 
 ```
     // cool_list = [1,2,3,4,5,6]
