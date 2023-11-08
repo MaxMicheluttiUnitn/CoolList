@@ -443,6 +443,18 @@ One more cool thing that you can do with CoolLists is accumulate their content. 
     }
 ```
 
+### Tinkering with RNG
+
+The CoolLists uses the cpp std::mt19937 implementation to generate random numbers. The seed is decided when the structure is constructed, but can be reset or set to an unsigned integer with the **reset_generator()** and **set_genertator(unsigned int seed)** functions
+
+```
+    // resets the generator for cool_list
+    cool_list.reset_generator();
+
+    // sets the generator with seed 100 for other_cool_list
+    other_cool_list.set_generator(100);
+```
+
 ### Matching CoolLists
 
 When are two CoolLists equal? When all their elements are the same and in the same order.<br>

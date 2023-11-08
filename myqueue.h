@@ -1148,6 +1148,20 @@ template <typename T> class CoolList{
     }
 
     /**
+     * Reset the seed for the generator
+    */
+    void reset_generator(){
+        this->generator = std::mt19937((unsigned)time(nullptr));
+    }
+
+    /**
+     * Set the seed for the generator
+    */
+    void set_generator(unsigned int seed){
+        this->generator = std::mt19937(seed);
+    }
+
+    /**
      * Applyes the specified function to all the elements of the list and removes all elements that make it true
     */
     void filter(bool (*func)(T)){
