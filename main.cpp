@@ -113,4 +113,13 @@ int main(){
 
     auto res_split = new_list.split(2);
     cout<<"Res Split :"<<res_split<<endl;
+
+    CoolList<int> new_cool_list = CoolList<int>();
+    new_cool_list.push_all(1,0,2,5,3,7,9,9,-1,6);
+
+    cout<<"New cool list: "<<new_cool_list<<endl;
+
+    new_cool_list.remove_all_every(0,9,5);
+    cout<<"New cool list: "<<new_cool_list<<endl;
 }
+

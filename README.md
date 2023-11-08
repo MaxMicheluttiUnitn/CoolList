@@ -52,11 +52,23 @@ There are multiple ways to add items to the CoolList:
     cool_list.enqueue(x);
 ```
 
+- **enqueue_all(T... items)**: add all the itesm to the end of the CoolList, using it as a queue
+
+```
+    cool_list.enqueue(1,2,3,4);
+```
+
 - **push(T item)**: add the item to the end of the CoolList, using it as a stack
 
 ```
     int x = 10;
     cool_list.push(x);
+```
+
+- **push_all(T... items)**: add the item to the end of the CoolList, using it as a stack
+
+```
+    cool_list.push_all(1,2,3,4);
 ```
 
 - **add_first(T item)**: add the item to the beginning of the CoolList
@@ -102,10 +114,22 @@ If you want to remove a specific item from the CoolList you can call **remove(T 
     string removed = cool_list.remove("hello");
 ```
 
-To delete all instances of a specific item ,call **remove_all(T item)**. The function will return an istance of the removed item. If the CoolList does not contain any instances of the item, an **ItemNotFoundException** is thrown.
+If you want to delete once multiple items from the CoolList you can call the **remove_all(T... items)** function. This will return a CoolList containing the removed items. If the CoolList does not contain any instances of an item, an **ItemNotFoundException** is thrown.
 
 ```
-    string removed = cool_list.remove_all("hello");
+    CoolList<string> removed = cool_list.remove("hello","how","are","you");
+```
+
+To delete all instances of a specific item, call **remove_every(T item)**. The function will return an istance of the removed item. If the CoolList does not contain any instances of the item, an **ItemNotFoundException** is thrown.
+
+```
+    string removed = cool_list.remove_every("hello");
+```
+
+To delete all instances of a multiple items, call **remove_all_every(T... items)**. The function will return a CoolList with an single istance of the removed items (you will not get copies). If the CoolList does not contain any instances of any item, an **ItemNotFoundException** is thrown.
+
+```
+    CoolList<string> removed = cool_list.remove_all_every("hello","how","are","you");
 ```
 
 ### Getting items

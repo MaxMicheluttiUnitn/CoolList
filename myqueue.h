@@ -835,7 +835,7 @@ template <typename T> class CoolList{
     /**
      * Removes all occureences of the item in the list which equals the item parameter
     */
-    T remove_all(T item){
+    T remove_every(T item){
         if(!this->contains(item))
             throw ItemNotFoundException("remove all");
         int index;
@@ -1137,6 +1137,48 @@ template <typename T> class CoolList{
 
     friend bool operator!=(const CoolList<T>& a,const CoolList<T>& b){
         return ! (a == b);
+    }
+
+    bool enqueue_all(T item){
+        return this->enqueue(item);
+    }
+
+    template <typename ...Ts> bool enqueue_all(T item,Ts... items){
+        bool intermediate = this->enqueue(item);
+        return intermediate && this->enqueue_all(items...);
+    }
+
+    bool push_all(T arg){
+        return this->push(arg);   
+    }
+
+    template <typename ...Ts> bool push_all(T arg, Ts...args){
+        bool intermediate = this->push(arg);
+        return intermediate && this->push_all(args...); 
+    }
+
+    CoolList<T> remove_all(T arg){
+        CoolList<T> removed = CoolList<T>();
+        removed.push(this->remove(arg));
+        return removed;
+    }
+
+    template <typename ...Ts> CoolList<T> remove_all(T arg, Ts... args){
+        CoolList<T> removed = CoolList<T>();
+        removed.push(this->remove(arg));
+        return removed + this->remove_all(args...);
+    }
+
+    CoolList<T> remove_all_every(T arg){
+        CoolList<T> removed = CoolList<T>();
+        removed.push(this->remove_every(arg));
+        return removed;
+    }
+
+    template <typename ...Ts> CoolList<T> remove_all_every(T arg, Ts... args){
+        CoolList<T> removed = CoolList<T>();
+        removed.push(this->remove_every(arg));
+        return removed + remove_all(args...);
     }
 };
 
