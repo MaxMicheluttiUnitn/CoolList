@@ -1,6 +1,6 @@
 # CoolList
 
-Wanting to experience lists the way cool people experience them? Tired of using boring lists for your projects? Frustrated by the std implementation of list for some unknown reason?  Well, today is your lucky day!!! This implementation of a list in C++ is the coolest list implementation you can find out there, and it's all open source and easily available. Just copy the **"myqueue.h"** file in whatever project you want to use it and include it with **#include "myqueue.h"**. Your programming experience will instantly turn into something awesome and you will finally become a certified cool developer. What are you waiting for!? Start using CoolLists right now!!!
+Wanting to experience lists the way cool people experience them? Tired of using boring lists for your projects? Frustrated by the std implementation of list for some unknown reason?  Well, today is your lucky day!!! This implementation of a list in C++ is the coolest list implementation you can find out there, and it's all open source and easily available. Just copy the **"coollist.h"** file in whatever project you want to use it and include it with **#include "coollist.h"**. Your programming experience will instantly turn into something awesome and you will finally become a certified cool developer. What are you waiting for!? Start using CoolLists right now!!!
 
 ## CoolList interface
 
